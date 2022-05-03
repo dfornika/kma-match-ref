@@ -1,0 +1,13 @@
+name: kma-match-ref
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3
+  - fastp=0.20.1
+  - kma=1.4.1
+  - seqtk=1.3
+  - bwa=0.7.17
+  - samtools=1.15.1
+  - qualimap=2.2.2d

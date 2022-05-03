@@ -59,7 +59,9 @@ process kma_align {
       -ipe ${read_1} ${read_2} 
 
     cat ${sample_id}.res | awk '\$1 ~ /^#/ {print substr(tolower(\$0), 2)}; \$1 ~ !/^#/ {print \$0}' \
-      | tr -d ' ' | tr \$'\\t' ',' > ${sample_id}_kma.csv
+      | tr -d ' ' | tr \$'\\t' ',' > ${sample_id}_kma_unsorted.csv
+    head -n 1 ${sample_id}_kma_unsorted.csv > ${sample_id}_kma.csv
+    sort -t ',' -k10,10nr <(tail -qn+2 ${sample_id}_kma_unsorted.csv) >> ${sample_id}_kma.csv
     """
 }
 
@@ -73,12 +75,15 @@ process choose_best_ref {
   tuple val(sample_id), path(kma_output), path(ref_db)
 
   output:
-  tuple val(sample_id), path("${sample_id}_ref.fa")
+  tuple val(sample_id), path("${sample_id}_ref.fa"), optional: true
 
   script:
   """
   choose_best_ref.py ${kma_output} --db ${ref_db} > best_ref_id.tsv
-  seqtk subseq ${ref_db} best_ref_id.tsv > ${sample_id}_ref.fa
+  num_ref_ids=\$(wc -l < best_ref_id.tsv)
+  if [ \${num_ref_ids} -gt 0 ]; then
+    seqtk subseq ${ref_db} best_ref_id.tsv > ${sample_id}_ref.fa
+  fi
   """
 }
 

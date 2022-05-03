@@ -54,13 +54,13 @@ def find_seq_in_db(db_path, kma_template_name):
 
 def main(args):
     kma_results = parse_kma_results(args.kma_results)
-    kma_results_sorted_by_q_value_descending = sorted(kma_results, key=lambda x: x['q_value'], reverse=True)
+    kma_results_sorted_by_q_value_descending = list(sorted(kma_results, key=lambda x: x['q_value'], reverse=True))
+    if len(kma_results_sorted_by_q_value_descending) > 0:
+        best_match_kma_template = kma_results_sorted_by_q_value_descending[0]['template']
+        matches = find_seq_in_db(args.db, best_match_kma_template)
     
-    best_match_kma_template = kma_results_sorted_by_q_value_descending[0]['template']
-    matches = find_seq_in_db(args.db, best_match_kma_template)
-    
-    for match in matches:
-        print(match)
+        for match in matches:
+            print(match)
     
 
 if __name__ == '__main__':

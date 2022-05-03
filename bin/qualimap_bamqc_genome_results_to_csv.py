@@ -18,7 +18,7 @@ def main(args):
                 output_data['mean_coverage'] = round(float(mean_coverage.replace(',', '')), 2)
             if line.startswith('std coverageData'):
                 stdev_coverage = line.split('=')[1].strip().strip('X')
-                output_data['stdev_coverage'] = round(float(stdev_coverage), 2)
+                output_data['stdev_coverage'] = round(float(stdev_coverage.replace(',', '')), 2)
             if 'reference with a coverageData >= 5X' in line:
                 proportion_genome_covered_over_5x = float(line.split(' ')[3].strip('%')) / 100
                 output_data['proportion_genome_covered_over_5x'] = round(proportion_genome_covered_over_5x, 4)

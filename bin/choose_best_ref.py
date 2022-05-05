@@ -56,16 +56,20 @@ def main(args):
     kma_results = parse_kma_results(args.kma_results)
     kma_results_sorted_by_q_value_descending = list(sorted(kma_results, key=lambda x: x['q_value'], reverse=True))
     if len(kma_results_sorted_by_q_value_descending) > 0:
-        best_match_kma_template = kma_results_sorted_by_q_value_descending[0]['template']
-        matches = find_seq_in_db(args.db, best_match_kma_template)
-    
-        for match in matches:
-            print(match)
-    
+        best_match_kma_result = kma_results_sorted_by_q_value_descending[0]
+        sufficient_identity = best_match_kma_result['template_identity'] > args.min_template_identity
+        sufficient_coverage = best_match_kma_result['template_coverage'] > args.min_template_coverage
+        if sufficient_identity and sufficient_coverage:
+            matches = find_seq_in_db(args.db, best_match_kma_result['template'])
+            for match in matches:
+                print(match)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('kma_results')
     parser.add_argument('--db')
+    parser.add_argument('--min-template-identity', type=float, default=85.0)
+    parser.add_argument('--min-template-coverage', type=float, default=85.0)
     args = parser.parse_args()
     main(args)

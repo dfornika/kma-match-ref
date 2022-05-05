@@ -79,7 +79,11 @@ process choose_best_ref {
 
   script:
   """
-  choose_best_ref.py ${kma_output} --db ${ref_db} > best_ref_id.tsv
+  choose_best_ref.py ${kma_output} \
+    --db ${ref_db} \
+    --min-template-identity ${params.ref_matching_min_template_identity} \
+    --min-template-coverage ${params.ref_matching_min_template_coverage} \
+    > best_ref_id.tsv
   num_ref_ids=\$(wc -l < best_ref_id.tsv)
   if [ \${num_ref_ids} -gt 0 ]; then
     seqtk subseq ${ref_db} best_ref_id.tsv > ${sample_id}_ref.fa

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import csv
@@ -17,19 +17,23 @@ def flatten_and_select_fields_from_summary(parsed_fastp):
     # TODO: re-write this as a loop that iterates through parsed_fastp['summary']
     summary['total_reads_before_filtering'] = parsed_fastp['summary']['before_filtering']['total_reads']
     summary['total_bases_before_filtering'] = parsed_fastp['summary']['before_filtering']['total_bases']
+    summary['read1_mean_length_before_filtering'] = parsed_fastp['summary']['before_filtering']['read1_mean_length']
+    summary['read2_mean_length_before_filtering'] = parsed_fastp['summary']['before_filtering']['read2_mean_length']
     summary['q20_bases_before_filtering'] = parsed_fastp['summary']['before_filtering']['q20_bases']
     summary['q30_bases_before_filtering'] = parsed_fastp['summary']['before_filtering']['q30_bases']
     summary['q20_rate_before_filtering'] = parsed_fastp['summary']['before_filtering']['q20_rate']
     summary['q30_rate_before_filtering'] = parsed_fastp['summary']['before_filtering']['q30_rate']
     summary['total_reads_after_filtering'] = parsed_fastp['summary']['after_filtering']['total_reads']
     summary['total_bases_after_filtering'] = parsed_fastp['summary']['after_filtering']['total_bases']
+    summary['read1_mean_length_after_filtering'] = parsed_fastp['summary']['after_filtering']['read1_mean_length']
+    summary['read2_mean_length_after_filtering'] = parsed_fastp['summary']['after_filtering']['read2_mean_length']
     summary['q20_bases_after_filtering'] = parsed_fastp['summary']['after_filtering']['q20_bases']
     summary['q30_bases_after_filtering'] = parsed_fastp['summary']['after_filtering']['q30_bases']
     summary['q20_rate_after_filtering'] = parsed_fastp['summary']['after_filtering']['q20_rate']
     summary['q30_rate_after_filtering'] = parsed_fastp['summary']['after_filtering']['q30_rate']
 
     return summary
-    
+
 
 def main(args):
 
@@ -41,19 +45,23 @@ def main(args):
         "sample_id",
         "total_reads_before_filtering",
         "total_bases_before_filtering",
+        "read1_mean_length_before_filtering",
+        "read2_mean_length_before_filtering",
         "q20_bases_before_filtering",
         "q30_bases_before_filtering",
         "q20_rate_before_filtering",
         "q30_rate_before_filtering",
         "total_reads_after_filtering",
         "total_bases_after_filtering",
+        "read1_mean_length_after_filtering",
+        "read2_mean_length_after_filtering",
         "q20_bases_after_filtering",
         "q30_bases_after_filtering",
         "q20_rate_after_filtering",
         "q30_rate_after_filtering",
     ]
     
-    writer = csv.DictWriter(sys.stdout, fieldnames=output_fields, dialect='excel-tab')
+    writer = csv.DictWriter(sys.stdout, fieldnames=output_fields, dialect='unix', quoting=csv.QUOTE_MINIMAL)
     writer.writeheader()
     writer.writerow(output_data)
 
